@@ -1,0 +1,49 @@
+version: '2.0'
+
+services:
+  base: &base
+    # image: an-automated-build-for-Dockerfile-dev
+    # image: or and image that perform bundle on top of Dockerfile-dev
+    build:
+      context: .
+      dockerfile: Dockerfile-dev
+    env_file: dev.env
+    pid: host
+    working_dir: /src
+    depends_on:
+      - db
+    volumes:
+      - .:/src
+      - node_modules:/src/node_modules
+      - bundle:/usr/local/bundle
+
+  app:
+    <<: *base
+    ports:
+      - "3000:3000"
+    command: /bin/sh -c 'bundle && ./bin/rake db:migrate db:setup && ./bin/rails s'
+
+  webpack:
+    <<: *base
+    ports:
+      - "8080:8080"
+    command: /bin/sh -c './bin/yarn install && ./bin/webpack-dev-server'
+
+  guard:
+    <<: *base
+    environment:
+      RAILS_ENV: test
+    command: /bin/sh -c './bin/rails runner ./lib/guard_specs.rb'
+
+  db:
+    image: postgres:9.6.3
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD:
+    volumes:
+      - db:/var/lib/postgresql/data
+
+volumes:
+  db:
+  bundle:
+  node_modules:
