@@ -5,9 +5,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
+import Button from 'react-md/lib/Buttons/Button';
 
 const Hello = props => (
-  <div>Hello {props.name}!</div>
+  <Button raised secondary iconBefore={false} label={"Hello " + props.name + "!"}>favorite</Button>
 )
 
 Hello.defaultProps = {
