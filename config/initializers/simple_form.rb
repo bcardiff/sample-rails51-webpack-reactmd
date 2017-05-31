@@ -167,3 +167,13 @@ SimpleForm.setup do |config|
   # Defines which i18n scope will be used in Simple Form.
   # config.i18n_scope = 'simple_form'
 end
+
+module ReactComponents
+  def submit(*args, &block)
+    # TODO grab from template or self the name of the model and action
+    template.content_tag :div, :data => { :"react-class" => "SubmitButton", :"react-props" => {label: "Submit"}} do
+    end
+  end
+end
+
+SimpleForm::FormBuilder.send :include, ReactComponents

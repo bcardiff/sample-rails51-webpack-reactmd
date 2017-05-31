@@ -1,5 +1,6 @@
 class Album < ApplicationRecord
   validates :title, presence: true
+  validates :year, numericality: { only_integer: true }
   validate :year_range
 
   def year_range
